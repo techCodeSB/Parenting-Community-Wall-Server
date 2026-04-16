@@ -26,29 +26,26 @@ class PostController {
 
 
     static getAllPost = async (req, res) => {
-        let { page = 1, limit = 10 } = req.body;
+        let { page = 1, limit = 10 } = req.query;
+
         page = Number(page);
         limit = Number(limit);
+
         const skip = (page - 1) * limit;
 
-
         const [data, totalData] = await Promise.all([
-            await postModel.find().skip(skip).limit(limit),
-            await userModel.countDocuents()
+            postModel.find().skip(skip).limit(limit).sort({_id: -1}),
+            postModel.countDocuments()
         ]);
 
-        if (!data || data.length === 0) {
-            throw new ApiError(404, "No Post");
-        }
-
         return res.status(200).json({
-            data: data,
+            data,
             total: totalData,
             page,
             limit
         });
+    };
 
-    }
 
     // Get Single Post with all Comments and Likes
     static getSinglePost = async (req, res) => {
@@ -131,7 +128,7 @@ class PostController {
             }
         })
 
-        if (result.matchedCount === 0) {
+        if (newComment.matchedCount === 0) {
             throw new ApiError(400, "Post not found");
         }
 

@@ -8,7 +8,7 @@ const errorMiddleware = require("./middlewares/error.middleware");
 const routes = require("./routes/post.route");
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 
 
 
@@ -21,9 +21,11 @@ app.use(errorMiddleware);
 
 
 
+
+
 connection().then(con => {
     if (con) {
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0',  () => {
             console.log("[*] Database Run")
             console.log("[*] Server Running on " + PORT);
         })

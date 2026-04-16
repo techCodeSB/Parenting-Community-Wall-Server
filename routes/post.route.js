@@ -3,6 +3,10 @@ const PostController = require("../controllers/post.controller");
 
 
 
+router
+    .get("/test", (req, res)=>{
+        res.send("Hello world")
+    })
 
 router
     .route("/posts")
@@ -17,8 +21,13 @@ router
     .get(PostController.getSinglePost);
 
 router
-    .route("/posts/comments")
+    .route("/posts/comment")
     .post(PostController.addComment);
+
+router
+    .route("/posts/likes")
+    .post(PostController.toggleLike);
+
 
 
 
