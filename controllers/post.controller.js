@@ -68,15 +68,51 @@ class PostController {
 
 
 
-    static like = async (req, res) => {
-        const { like, postId } = req.body;
+    static toggleLike = async (req, res) => {
+        const { postId, userId } = req.body;
 
-        if (like === undefined || like === null) {
-            throw new ApiError(500, "like is required");
+
+        if ([postId, userId].some((field) => !field || field === "")) {
+            throw new ApiError(400, "postId and userId are required");
         }
 
+        // check post exist
+        const post = await postModel.findById(postId);
 
-    }
+        if (!post) {
+            throw new ApiError(400, "Post not found");
+        }
+
+        let isLiked = false;
+
+        if (post.likedUsers.includes(userId)) {
+            // Unlike post
+            await postModel.updateOne(
+                { _id: postId },
+                {
+                    $pull: { likedUsers: userId },
+                    $inc: { like: -1 }
+                }
+            );
+        } else {
+            // Like Post
+            await postModel.updateOne(
+                { _id: postId },
+                {
+                    $addToSet: { likedUsers: userId },
+                    $inc: { like: 1 }
+                }
+            );
+            isLiked = true;
+        }
+
+        return res.status(200).json({
+            message: isLiked ? "Liked" : "Unliked",
+            liked: isLiked
+        });
+
+
+    };
 
 
     static addComment = async (req, res) => {

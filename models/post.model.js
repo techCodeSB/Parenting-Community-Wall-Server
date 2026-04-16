@@ -13,6 +13,11 @@ const postSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    likedUsers: [
+        {
+            type: String
+        }
+    ],
     comments: [
         {
             author: String,
