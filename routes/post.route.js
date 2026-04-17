@@ -3,10 +3,6 @@ const PostController = require("../controllers/post.controller");
 
 
 
-router
-    .get("/test", (req, res)=>{
-        res.send("Hello world")
-    })
 
 router
     .route("/posts")
