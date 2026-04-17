@@ -9,6 +9,8 @@ const connection = () => {
                 return resolve(true)
             })
             .catch(er => {
+                console.log(er);
+                console.log("===============");
                 return reject(er)
             })
     })
